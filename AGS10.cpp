@@ -3,12 +3,12 @@
 #include "AGS10.h"
 
 
-u8 Calc_CRC8(u8 *dat, u8 Num)
+byte Calc_CRC8(byte *dat, byte Num)
 {
-  u8 i,byte,crc=0xFF;
-  for(byte=0; byte<Num; byte++)
+  byte i,byte1,crc=0xFF;
+  for(byte1=0; byte1<Num; byte1++)
   {
-    crc^=(dat[byte]);
+    crc^=(dat[byte1]);
     for(i=0;i<8;i++)
     {
       if(crc & 0x80) crc=(crc<<1)^0x31;
@@ -30,10 +30,11 @@ void AGS10::begin()
   Wire.begin();
 }
 
-void AGS10::calibrate(bool select)
+void AGS10::calibrate(bool select, byte CALIB_CUST1, byte CALIB_CUST2)
 {
-  u8 data[4] = {CALIB_CMD1, CALIB_CMD2, CALIB_FACT, CALIB_FACT};
-  _crc = Calc_CRC8(data,1);
+  if (select == 0){
+  byte data[4] = {CALIB_CMD1, CALIB_CMD2, CALIB_FACT, CALIB_FACT};
+  _crc = Calc_CRC8(data, 1);
   Wire.beginTransmission(AGS10_ADDR);
   Wire.write(CALIB_REG);
   Wire.write(CALIB_CMD1);
@@ -42,6 +43,19 @@ void AGS10::calibrate(bool select)
   Wire.write(CALIB_FACT);
   Wire.write(_crc);
   Wire.endTransmission();
+  }
+  else if (select == 1){
+    byte data[4] = {CALIB_CMD1, CALIB_CMD2, CALIB_CUST1, CALIB_CUST2};
+    _crc = Calc_CRC8(data, 1);
+    Wire.beginTransmission(AGS10_ADDR);
+    Wire.write(CALIB_REG);
+    Wire.write(CALIB_CMD1);
+    Wire.write(CALIB_CMD2);
+    Wire.write(CALIB_CUST1);
+    Wire.write(CALIB_CUST2);
+    Wire.write(_crc);
+    Wire.endTransmission();
+  }
 }
 
 int AGS10::readVersion()
