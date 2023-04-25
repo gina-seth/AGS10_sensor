@@ -29,12 +29,12 @@ class AGS10 {
 
     AGS10();  // Constructor 
     void begin(); // Initialize the sensor
-    void calibrate(bool select); // Calibrate the sensor
+    void calibrate(bool select, uint8_t CALIB_CUST1, uint8_t CALIB_CUST2); // Calibrate the sensor
     void reset(); // Reset the sensor
     int readResist(); // Read the current resistance of the sensor in 0.1 kO
     int readVersion();  // Read the sensor's current firmware version 
     int readTVOC(); // Read the TVOC value in ppb
-    u8 Calc_CRC8(u8 *dat, u8 Num);
+    byte Calc_CRC8(byte *dat, byte Num);
 
 
   private: 
