@@ -16,6 +16,7 @@
 #define VERS_REG 0x11
 #define RESIST_REG 0x20
 #define CALIB_REG 0x01
+#define SLAVE_REG 0x21
 
 // Define the calibration commands
 #define CALIB_CMD1 0x00
@@ -29,12 +30,13 @@ class AGS10 {
 
     AGS10();  // Constructor 
     void begin(); // Initialize the sensor
-    void calibrate(bool select, uint8_t CALIB_CUST1, uint8_t CALIB_CUST2); // Calibrate the sensor
-    void reset(); // Reset the sensor
+    void calibrateFact(); // Calibrate the sensor
+	void calibrateCust(uint8_t CALIB_RES1, uint8_t CALIB_RES2); // Calibrate the sensor using a custom resistance value (measured in 0.1kΩ)
+    void setAddress(uint8_t newAddr); // Set the sensor's i2c addr to have more than one sensor on the same bus
     int readResist(); // Read the current resistance of the sensor in 0.1 kO
     int readVersion();  // Read the sensor's current firmware version 
     int readTVOC(); // Read the TVOC value in ppb
-    byte Calc_CRC8(byte *dat, byte Num);
+    uint8_t Calc_CRC8(uint8_t *dat, uint8_t Num); 
 
 
   private: 
@@ -43,7 +45,7 @@ class AGS10 {
     int _version; // Variable to store the version value 
     int _resist;  // Variable to store the resistance value
     int _status; // Variable to store the status of the sensor [INACTIVE]
-    u8 _crc;
+    byte _crc;
 
   };
 
