@@ -72,6 +72,8 @@ void AGS10::setAddress(uint8_t newAddr)
   Wire.write(newAddrInv);
   Wire.write(newAddr);
   Wire.write(newAddrInv);
+  Wire.write(_crc);
+  Wire.endTransmission();
 }
 
 int AGS10::readVersion()
